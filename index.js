@@ -9,7 +9,7 @@ Array.prototype.myForEach = function(callback, thisArg) {
      callback.call(thisArg);
   }
 
-  for (let i = 0; i < context.length; i++) {
+  for (let i = 0; i < this.length; i++) {
     callback(this[i], i, this);
   }
 };
@@ -25,7 +25,7 @@ Array.prototype.myMap = function(callback, thisArg) {
      callback.call(thisArg);
   }
 
-  for (let i = 0; i < context.length; i++) {
+  for (let i = 0; i < this.length; i++) {
     newArray.push(callback(this[i], i, this));
   }
 
