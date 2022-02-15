@@ -5,14 +5,12 @@ Array.prototype.myForEach = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let context = this;
-
   if (thisArg !== undefined) {
-    context = thisArg;
+     callback.call(thisArg);
   }
 
   for (let i = 0; i < context.length; i++) {
-    callback(context[i], i, context);
+    callback(this[i], i, this);
   }
 };
 
@@ -22,16 +20,17 @@ Array.prototype.myMap = function(callback, thisArg) {
   }
 
   let newArray = [];
-  let context = this;
 
   if (thisArg !== undefined) {
-    context = thisArg;
+     callback.call(thisArg);
   }
 
-  for (let i = 0; i < this.length; i++) {
+  for (let i = 0; i < context.length; i++) {
     newArray.push(callback(this[i], i, this));
   }
+
   return newArray;
+
 };
 
 Array.prototype.myFind = function(callback, thisArg) {
@@ -39,10 +38,8 @@ Array.prototype.myFind = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let context = this;
-
   if (thisArg !== undefined) {
-    context = thisArg;
+     callback.call(thisArg);
   }
 
   for (let i = 0; i < this.length; i++) {
@@ -58,9 +55,8 @@ Array.prototype.myFilter = function(callback, thisArg) {
   }
 
   let newArray = [];
-  let context = this;
   if (thisArg !== undefined) {
-    context = thisArg;
+     callback.call(thisArg);
   }
 
   for (let i = 0; i < this.length; i++) {
