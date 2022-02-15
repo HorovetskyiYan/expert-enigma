@@ -86,19 +86,15 @@ Array.prototype.newReduce = function(callback, initialValue) {
   }
 
   let i = 0;
-
-  if (this.length < 1) {
+  if (arguments.length < 2) {
     i = 1;
-    result = this[0];
+    initialValue = this[0];
   }
-
-  for (; i < this.length; i++) {
-    result = callback(this[i], result);
+  for(; i < this.length; i++) {
+    initialValue = callback(initialValue, this[i], i, this);
   }
-
-  return result;
+  return initialValue;
 };
-
 
 Function.prototype.myBind = function(context, ...args) {
   if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
@@ -125,10 +121,10 @@ Function.prototype.myApply = function(context, args) {
   if (args !== undefined) {
     result = context[symbol](...args);
   } else {
-    result = context[symbol]()
+    result = context[symbol]();
   }
   delete context[symbol];
-  return result
+  return result;
 };
 
 Function.prototype.myCall = function(context, ...args) {
@@ -142,8 +138,8 @@ Function.prototype.myCall = function(context, ...args) {
   if (args !== undefined) {
     result = context[symbol](args);
   } else {
-    result = context[symbol]()
+    result = context[symbol]();
   }
   delete context[symbol];
-  return result
+  return result;
 };
