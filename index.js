@@ -21,7 +21,8 @@ Array.prototype.myMap = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let newArray = [], context = this;
+  let newArray = [];
+  let context = this;
 
   if (thisArg !== undefined) {
     context = thisArg;
@@ -56,7 +57,8 @@ Array.prototype.myFilter = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let newArray = [], context = this;
+  let newArray = [];
+  let context = this;
   if (thisArg !== undefined) {
     context = thisArg;
   }
@@ -73,24 +75,30 @@ Array.prototype.newReduce = function(callback, initialValue) {
   if (typeof callback !== 'function') {
     throw new Error('Enter the function');
   }
-  if (this === []) {
-    throw new TypeError('this === []');
+  if (Array.isArray(this) && this.length === 0) {
+    throw new TypeError('Enter array wich have more then zero items');
   }
   if (this.length === 1 && initialValue === undefined) {
     return this;
   }
-  if (initialValue !== undefined && this === []) {
+  if (initialValue !== undefined && this.length === 0) {
     return [initialValue];
   }
 
-  let result = initialValue || 0;
+  let i = 0;
 
-  for (let i = 0; i < this.length; i++) {
+  if (this.length < 1) {
+    i = 1;
+    result = this[0];
+  }
+
+  for (; i < this.length; i++) {
     result = callback(this[i], result);
   }
 
   return result;
 };
+
 
 Function.prototype.myBind = function(context, ...args) {
   if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
@@ -103,27 +111,39 @@ Function.prototype.myBind = function(context, ...args) {
     let result = context[symbol](...args);
     delete context[symbol];
     return result;
-  }
+  };
 };
 
 Function.prototype.myApply = function(context, args) {
-  if (typeof context !== 'object') {
+  if (context.constructor !== Object) {
     throw new Error('Enter the object');
   }
 
   let symbol = Symbol();
-  let result = context[symbol](...args);
+  context[symbol] = this;
+  let result;
+  if (args !== undefined) {
+    result = context[symbol](...args);
+  } else {
+    result = context[symbol]()
+  }
   delete context[symbol];
-  result();
+  return result
 };
 
 Function.prototype.myCall = function(context, ...args) {
-  if (typeof context !== 'array') {
+  if (Array.isArray(context)) {
     throw new Error('Enter the array');
   }
 
   let symbol = Symbol();
-  let result = context[symbol](...args);
+  context[symbol] = this;
+  let result;
+  if (args !== undefined) {
+    result = context[symbol](args);
+  } else {
+    result = context[symbol]()
+  }
   delete context[symbol];
-  result();
+  return result
 };
