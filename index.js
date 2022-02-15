@@ -5,12 +5,10 @@ Array.prototype.myForEach = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let context;
+  let context = this;
 
   if (thisArg !== undefined) {
     context = thisArg;
-  } else {
-    context = this;
   }
 
   for (let i = 0; i < context.length; i++) {
@@ -23,12 +21,10 @@ Array.prototype.myMap = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let newArray = [], context;
+  let newArray = [], context = this;
 
   if (thisArg !== undefined) {
     context = thisArg;
-  } else {
-    context = this;
   }
 
   for (let i = 0; i < this.length; i++) {
@@ -42,12 +38,10 @@ Array.prototype.myFind = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let context;
+  let context = this;
 
   if (thisArg !== undefined) {
     context = thisArg;
-  } else {
-    context = this;
   }
 
   for (let i = 0; i < this.length; i++) {
@@ -62,12 +56,9 @@ Array.prototype.myFilter = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let newArray = [], context;
-
+  let newArray = [], context = this;
   if (thisArg !== undefined) {
     context = thisArg;
-  } else {
-    context = this;
   }
 
   for (let i = 0; i < this.length; i++) {
@@ -105,6 +96,7 @@ Function.prototype.myBind = function(context, ...args) {
   if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
     throw new Error('Enter the context');
   }
+
   let symbol = Symbol();
   context[symbol] = this;
   return function() {
@@ -118,6 +110,7 @@ Function.prototype.myApply = function(context, args) {
   if (typeof context !== 'object') {
     throw new Error('Enter the object');
   }
+
   let symbol = Symbol();
   let result = context[symbol](...args);
   delete context[symbol];
