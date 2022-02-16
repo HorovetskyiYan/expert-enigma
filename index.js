@@ -1,13 +1,9 @@
 'use strick';
 
-Function.prototype.myBind = function(context, args) {
-  if (typeof this !== "function") {
-    throw new Error('this not a function');
-  }
+Function.prototype.myBind = function(context, ...args) {
   if (context === null || undefined) {
     throw new Error('Enter the context');
   }
-
   const func = this
   return function(...args2) {
     let symbol = Symbol();
