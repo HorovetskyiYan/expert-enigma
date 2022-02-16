@@ -8,12 +8,14 @@ Function.prototype.myBind = function(context) {
     throw new Error('Enter the context');
   }
 
-  let func = this;
-  let args = Array.prototype.slice.call(arguments, 1);
-  return function ropeFunc() {
-    let targetArguments = Array.prototype.slice.call(arguments);
-    return func.apply(context, args.concat(targetArguments));
-  };
+  const func = this
+  return function(...args2) {
+    let symbol = Symbol();
+    context[symbol] = func;
+    let result = context[symbol](...args, ...args2);
+    delete context[symbol];
+    return result;
+  }
 };
 
 Function.prototype.myApply = function(context, args) {
