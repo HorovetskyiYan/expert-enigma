@@ -99,10 +99,12 @@ Array.prototype.myFind = function(callback, thisArg) {
   if (typeof callback !== 'function') {
     throw new Error('Enter the function');
   }
+
   thisArg = thisArg || this;
   if (thisArg.__proto__.constructor === Object) {
     thisArg = this;
   }
+
   for (let i = 0; i < thisArg.length; i++) {
     if (callback.myCall(thisArg, thisArg[i], i, this)) {
       return this[i]
@@ -117,6 +119,7 @@ Array.prototype.myForEach = function(callback, thisArg) {
 
   let result = []
   thisArg = thisArg || this;
+
   if (thisArg.__proto__.constructor === Object) {
     thisArg = this;
   }
