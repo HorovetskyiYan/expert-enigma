@@ -1,7 +1,7 @@
 'use strick';
 
 Function.prototype.myBind = function(context, ...args) {
-  if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
+  if (context === null || undefined) {
     throw new Error('Enter the context');
   }
 
