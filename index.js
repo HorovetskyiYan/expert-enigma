@@ -1,6 +1,6 @@
 'use strick';
 
-Function.prototype.myBind = function(context) {
+Function.prototype.myBind = function(context, args) {
   if (typeof this !== "function") {
     throw new Error('this not a function');
   }
