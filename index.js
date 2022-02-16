@@ -1,35 +1,31 @@
 'use strick';
 
-Function.prototype.myApply = function(context, args) {
-  if (context.constructor !== Object) {
-    throw new Error('Enter the object');
+Function.prototype.myBind = function(context, ...args) {
+  if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
+    throw new Error('Enter the context');
   }
 
   let symbol = Symbol();
   context[symbol] = this;
-  let result;
-  if (args !== undefined) {
-    result = context[symbol](...args);
-  } else {
-    result = context[symbol]();
-  }
+  return function() {
+    let result = context[symbol](...args);
+    delete context[symbol];
+    return result;
+  };
+};
+
+Function.prototype.myApply = function(context, args) {
+  let symbol = Symbol();
+  context[symbol] = this;
+  let result = context[symbol](...args);
   delete context[symbol];
   return result;
 };
 
 Function.prototype.myCall = function(context, ...args) {
-  if (Array.isArray(context)) {
-    throw new Error('Enter the array');
-  }
-
   let symbol = Symbol();
   context[symbol] = this;
-  let result;
-  if (args !== undefined) {
-    result = context[symbol](args);
-  } else {
-    result = context[symbol]();
-  }
+  let result = context[symbol](...args);
   delete context[symbol];
   return result;
 };
@@ -38,13 +34,11 @@ Array.prototype.myForEach = function(callback, thisArg) {
   if (typeof callback !== 'function') {
     throw new Error('Enter the function');
   }
+  thisArg = thisArg || this;
 
-  if (thisArg !== undefined) {
-     callback.myCall(thisArg);
-  }
 
   for (let i = 0; i < this.length; i++) {
-    callback(this[i], i, this);
+    callback(thisArg[i], i, this);
   }
 };
 
@@ -53,55 +47,30 @@ Array.prototype.myMap = function(callback, thisArg) {
     throw new Error('Enter the function');
   }
 
-  let newArray = [];
-
-  if (thisArg !== undefined) {
-     callback.myCall(thisArg);
-  }
+  let result = [];
+  thisArg = thisArg || this;
 
   for (let i = 0; i < this.length; i++) {
-    newArray.push(callback(this[i], i, this));
+    result.push(callback.call(thisArg, thisArg[i], i, this));
   }
 
-  return newArray;
+  return result;
 
 };
 
-Array.prototype.myFind = function(callback, thisArg) {
-  if (typeof callback !== 'function') {
-    throw new Error('Enter the function');
-  }
-
-  if (thisArg !== undefined) {
-     callback.myCall(thisArg);
-  }
+Array.prototype.myFilter = function(callback, thisArgs) {
+  let result = []
+  thisArgs = thisArgs || this;
 
   for (let i = 0; i < this.length; i++) {
-    if (callback(this[i], i, this)) {
-      return this[i]
+    if (callback.myCall(thisArgs, thisArgs[i], i, this)) {
+      result.push(thisArgs[i])
     }
   }
-};
+  return result
+}
 
-Array.prototype.myFilter = function(callback, thisArg) {
-  if (typeof callback !== 'function') {
-    throw new Error('Enter the function');
-  }
-
-  let newArray = [];
-  if (thisArg !== undefined) {
-     callback.myCall(thisArg);
-  }
-
-  for (let i = 0; i < this.length; i++) {
-    if (callback(this[i], i, this)) {
-      newArray.push(this[i]);
-    }
-  }
-  return newArray;
-};
-
-Array.prototype.newReduce = function(callback, initialValue) {
+Array.prototype.myReduse = function(callback, initialValue) {
   if (typeof callback !== 'function') {
     throw new Error('Enter the function');
   }
@@ -126,50 +95,33 @@ Array.prototype.newReduce = function(callback, initialValue) {
   return initialValue;
 };
 
-Function.prototype.myBind = function(context, ...args) {
-  if (typeof context !== 'object' || typeof context !== 'function' || typeof context !== 'array') {
-    throw new Error('Enter the context');
+Array.prototype.myFind = function(callback, thisArg) {
+  if (typeof callback !== 'function') {
+    throw new Error('Enter the function');
   }
-
-  let symbol = Symbol();
-  context[symbol] = this;
-  return function() {
-    let result = context[symbol](...args);
-    delete context[symbol];
-    return result;
-  };
+  thisArg = thisArg || this;
+  if (thisArg.__proto__.constructor === Object) {
+    thisArg = this;
+  }
+  for (let i = 0; i < thisArg.length; i++) {
+    if (callback.myCall(thisArg, thisArg[i], i, this)) {
+      return this[i]
+    }
+  }
 };
 
-Function.prototype.myApply = function(context, args) {
-  if (context.constructor !== Object) {
-    throw new Error('Enter the object');
+Array.prototype.myForEach = function(callback, thisArg) {
+  if (typeof callback !== 'function') {
+    throw new Error('Enter the function');
   }
 
-  let symbol = Symbol();
-  context[symbol] = this;
-  let result;
-  if (args !== undefined) {
-    result = context[symbol](...args);
-  } else {
-    result = context[symbol]();
-  }
-  delete context[symbol];
-  return result;
-};
-
-Function.prototype.myCall = function(context, ...args) {
-  if (Array.isArray(context)) {
-    throw new Error('Enter the array');
+  let result = []
+  thisArg = thisArg || this;
+  if (thisArg.__proto__.constructor === Object) {
+    thisArg = this;
   }
 
-  let symbol = Symbol();
-  context[symbol] = this;
-  let result;
-  if (args !== undefined) {
-    result = context[symbol](args);
-  } else {
-    result = context[symbol]();
+  for (let i = 0; i < this.length; i++) {
+    callback.call(thisArg, thisArg[i], i, this);
   }
-  delete context[symbol];
-  return result;
 };
