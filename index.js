@@ -2,7 +2,7 @@
 
 Function.prototype.myBind = function(context) {
   if (typeof this !== "function") {
-    throw new Error('Enter the function');
+    throw new Error('this not a function');
   }
   if (context === null || undefined) {
     throw new Error('Enter the context');
