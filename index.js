@@ -2,7 +2,7 @@
 
 Function.prototype.myBind = function(context) {
   if (typeof this !== "function") {
-    throw new Error(this + "cannot be bound as it's not callable");
+    throw new Error('Enter the function');
   }
   if (context === null || undefined) {
     throw new Error('Enter the context');
