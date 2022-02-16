@@ -1,16 +1,18 @@
 'use strick';
 
-Function.prototype.myBind = function(context, ...args) {
+Function.prototype.myBind = function(context) {
+  if (typeof this !== "function") {
+    throw new Error(this + "cannot be bound as it's not callable");
+  }
   if (context === null || undefined) {
     throw new Error('Enter the context');
   }
 
-  return function() {
-    let symbol = Symbol();
-    context[symbol] = this;
-    let result = context[symbol](...args);
-    delete context[symbol];
-    return result;
+  let func = this;
+  let args = Array.prototype.slice.call(arguments, 1);
+  return function ropeFunc() {
+    let targetArguments = Array.prototype.slice.call(arguments);
+    return func.apply(context, args.concat(targetArguments));
   };
 };
 
