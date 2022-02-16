@@ -5,9 +5,9 @@ Function.prototype.myBind = function(context, ...args) {
     throw new Error('Enter the context');
   }
 
-  let symbol = Symbol();
-  context[symbol] = this;
   return function() {
+    let symbol = Symbol();
+    context[symbol] = this;
     let result = context[symbol](...args);
     delete context[symbol];
     return result;
